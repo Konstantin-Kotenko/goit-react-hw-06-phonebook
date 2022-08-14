@@ -1,5 +1,4 @@
 import { useSelector, useDispatch } from 'react-redux';
-// import { useMemo } from 'react';
 import { remove, getFilterValue, getItemsValue } from 'redux/contacts';
 import { Item, Text, Button } from './Item.styled';
 
