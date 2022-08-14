@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useMemo } from 'react';
+// import { useMemo } from 'react';
 import { remove, getFilterValue, getItemsValue } from 'redux/contacts';
 import { Item, Text, Button } from './Item.styled';
 
@@ -12,16 +12,12 @@ export const ContactItem = () => {
     dispatch(remove(id));
   };
 
-  const getVisibleContacts = useMemo(
-    () =>
-      states.filter(state =>
-        state.name.toLowerCase().includes(filter.toLowerCase())
-      ),
-    [states, filter]
+  const getVisibleContacts = states?.filter(state =>
+    state?.name.toLowerCase().includes(filter.toLowerCase())
   );
   return (
     <>
-      {getVisibleContacts.map(({ id, name, number }) => (
+      {getVisibleContacts?.map(({ id, name, number }) => (
         <Item key={id}>
           <Text>
             {name} : {number}
