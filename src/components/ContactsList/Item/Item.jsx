@@ -1,20 +1,34 @@
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { useMemo } from 'react';
+import { remove, getFilterValue, getItemsValue } from 'redux/contacts';
 import { Item, Text, Button } from './Item.styled';
 
-export const ContactItem = ({ name, id, number, onDeleteContact }) => {
-  return (
-    <Item key={id}>
-      <Text>
-        {name} : {number}
-      </Text>
-      <Button onClick={() => onDeleteContact(id)}>Delete</Button>
-    </Item>
-  );
-};
+export const ContactItem = () => {
+  const filter = useSelector(getFilterValue);
+  const states = useSelector(getItemsValue);
+  const dispatch = useDispatch();
 
-ContactItem.propTypes = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
-  onDeleteContact: PropTypes.func,
+  const deleteContact = id => {
+    dispatch(remove(id));
+  };
+
+  const getVisibleContacts = useMemo(
+    () =>
+      states.filter(state =>
+        state.name.toLowerCase().includes(filter.toLowerCase())
+      ),
+    [states, filter]
+  );
+  return (
+    <>
+      {getVisibleContacts.map(({ id, name, number }) => (
+        <Item key={id}>
+          <Text>
+            {name} : {number}
+          </Text>
+          <Button onClick={() => deleteContact(id)}>Delete</Button>
+        </Item>
+      ))}
+    </>
+  );
 };

@@ -1,5 +1,7 @@
 import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
+import { nanoid } from 'nanoid';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   FormContact,
   Label,
@@ -7,6 +9,7 @@ import {
   Button,
   ErrorText,
 } from './ContactForm.styled';
+import { add, getItemsValue } from 'redux/contacts';
 
 const FormError = ({ name }) => {
   return (
@@ -34,9 +37,20 @@ const schema = yup.object().shape({
     ),
 });
 
-export const ContactForm = ({ onSubmit }) => {
-  const handleSubmit = (values, { resetForm }) => {
-    onSubmit(values);
+export const ContactForm = () => {
+  const states = useSelector(getItemsValue);
+  const dispatch = useDispatch();
+
+  const handleSubmit = ({ name, number }, { resetForm }) => {
+    const newContact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+    states.find(state => state.name === newContact.name)
+      ? alert(`${name} is already in contacts. `)
+      : dispatch(add(newContact));
+
     resetForm();
   };
 
